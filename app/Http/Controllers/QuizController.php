@@ -16,18 +16,27 @@ class QuizController extends Controller
         return view('quiz', compact('chapter'));
     }
 
-    public function submit(Request $request, $chapter_id)
-    {
-        $chapter = Chapter::findOrFail($chapter_id);
-        $isCorrect = $request->input('jawaban') === $chapter->jawabanBenar;
+public function submitAnswer(Request $request, $chapter_id) {
+    $validated = $request->validate([
+        'answer' => 'required|exists:choices,id', // Validasi jawaban yang dipilih
+    ]);
 
-        Skor::create([
-            'id_user' => Auth::id(),
-            'id_chapter' => $chapter->id,
-            'nilai' => $isCorrect ? 100 : 0
-        ]);
+    // Ambil soal berdasarkan chapter
+    $question = Question::where('chapter_id', $chapter_id)->first();
 
-        return redirect()->route('scores.index');
-    }
+    // Cek apakah jawaban benar
+    $isCorrect = ($validated['answer'] == $question->correct_answer);
+
+    // Simpan hasil jawaban
+    UserAnswer::create([
+        'user_id' => auth()->id(),
+        'question_id' => $question->id,
+        'is_correct' => $isCorrect,
+    ]);
+
+    // Kirim kembali hasil ke tampilan
+    return view('quiz.result', compact('isCorrect', 'question', 'chapter_id'));
+}
+
 }
 

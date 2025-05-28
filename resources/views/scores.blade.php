@@ -8,7 +8,9 @@
 <body>
     <h1>Nilai Saya</h1>
 <ul>
+ 
     @foreach($scores as $skor)
+   
         <li>Chapter {{ $skor->chapter->id }}: {{ $skor->nilai }}</li>
     @endforeach
 </ul>

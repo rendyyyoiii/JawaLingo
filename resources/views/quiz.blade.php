@@ -8,12 +8,34 @@
 <body>
     <h1>Quiz Chapter</h1>
 <p>{{ $chapter->pertanyaan }}</p>
-<form method="POST" action="{{ route('quiz.submit', $chapter->id) }}">
+<!-- resources/views/quiz.blade.php -->
+
+<form action="{{ route('quiz.submit', ['chapter_id' => $chapter->id]) }}" method="POST">
     @csrf
-    <button name="jawaban" value="A">{{ $chapter->opsiA }}</button>
-    <button name="jawaban" value="B">{{ $chapter->opsiB }}</button>
-    <button name="jawaban" value="C">{{ $chapter->opsiC }}</button>
-    <button name="jawaban" value="D">{{ $chapter->opsiD }}</button>
+    <input type="hidden" name="question_id" value="{{ $chapter->id }}">
+
+    <label>
+        <input type="radio" name="jawaban" value="opsiA">
+        {{ $chapter->opsiA }}
+    </label><br>
+
+    <label>
+        <input type="radio" name="jawaban" value="opsiB">
+        {{ $chapter->opsiB }}
+    </label><br>
+
+    <label>
+        <input type="radio" name="jawaban" value="opsiC">
+        {{ $chapter->opsiC }}
+    </label><br>
+
+    <label>
+        <input type="radio" name="jawaban" value="opsiD">
+        {{ $chapter->opsiD }}
+    </label><br>
+
+    <button type="submit">Submit</button>
 </form>
+
 </body>
 </html>
